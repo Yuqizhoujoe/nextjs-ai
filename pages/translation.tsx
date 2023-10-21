@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 // import TranslationComponent from "../client/component/translation/TranslationComponent";
 
 const Translation = dynamic(
-  () => import("../client/component/translation/Translation"),
+  () => import("../component/translation/Translation"),
   {
     ssr: true,
   }

@@ -2,8 +2,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "@firebase/auth";
-import firebaseui from "firebaseui";
-
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -12,6 +10,7 @@ import firebaseui from "firebaseui";
 const firebaseConfig = {
   apiKey: "AIzaSyAEPe__RN2M__xNstUC1PDR8_V3FUdzsHc",
   authDomain: "jojo-nextjs-ai.firebaseapp.com",
+  databaseURL: "https://jojo-nextjs-ai-default-rtdb.firebaseio.com",
   projectId: "jojo-nextjs-ai",
   storageBucket: "jojo-nextjs-ai.appspot.com",
   messagingSenderId: "580697794238",
@@ -20,11 +19,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-const auth = getAuth(app);
-
-const firebaseUI = new firebaseui.auth.AuthUI(auth);
-
-export { app, analytics, auth, firebaseUI };
+export const app = initializeApp(firebaseConfig);
+export const analytics = getAnalytics(app);
+export const auth = getAuth(app);

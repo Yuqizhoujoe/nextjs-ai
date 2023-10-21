@@ -9,7 +9,6 @@ import { grey } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
 
 // nextjs
-import Link from "next/link";
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Button from "../component/common/Button";
@@ -32,9 +31,9 @@ const pages = [
     url: "/translation",
   },
   {
-    key: "transcription",
-    page: "Transcription",
-    url: "/transcription",
+    key: "search",
+    page: "Search",
+    url: "/search",
   },
 ];
 
@@ -84,7 +83,6 @@ export default function Header() {
             >
               <HomeIcon color="primary" />
             </IconButton>
-            <Search />
           </Box>
           <Box
             sx={{

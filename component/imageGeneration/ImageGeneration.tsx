@@ -3,12 +3,9 @@ import React, { useState } from "react";
 // mui
 import {
   Box,
-  Card,
   FormControl,
   Grid,
   IconButton,
-  ImageList,
-  ImageListItem,
   LinearProgress,
   TextField,
 } from "@mui/material";
@@ -17,10 +14,9 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 
 // react query
 import { useMutation } from "@tanstack/react-query";
-import { handleOpenAIAPI, openAIAPIEnum } from "../../../shared/openai/openAI";
+import { handleOpenAIAPI, openAIAPIEnum } from "../../shared/openai/openAI";
 import Paper from "@mui/material/Paper";
 import { Simulate } from "react-dom/test-utils";
-import load = Simulate.load;
 
 const COMPONENT_NAME = "image_generation_component";
 
@@ -182,7 +178,18 @@ const ImageGeneration = () => {
   };
 
   return (
-    <Box data-testid={COMPONENT_NAME} sx={{}}>
+    <Box
+      data-testid={COMPONENT_NAME}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: {
+          md: "80vh", // Default height for screens less than 1500px
+          lg: "95vh", // Height for screens 1500px and greater
+        },
+      }}
+    >
       {loading && renderLoadingBar()}
       {!loading && renderImageContainer()}
       {renderUserInputBox()}

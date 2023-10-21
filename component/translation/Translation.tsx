@@ -14,15 +14,15 @@ import { Card, styled, Text } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
 
 // openai
-import { handleOpenAIAPI, openAIAPIEnum } from "../../../shared/openai/openAI";
+import { handleOpenAIAPI, openAIAPIEnum } from "../../shared/openai/openAI";
 
 // utility
 import { isEmpty } from "lodash";
 
 // constant
-import { userTypes } from "../../../shared/data/constant";
+import { userTypes } from "../../shared/data/constant";
 // interface
-import { Conversation } from "../../../shared/data/interface";
+import { Conversation } from "../../shared/data/interface";
 
 const COMPONENT_NAME = "translation_component";
 
@@ -175,7 +175,11 @@ export default function Translation() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        // height: "auto",
+        justifyContent: "center",
+        height: {
+          md: "80vh", // Default height for screens less than 1500px
+          lg: "95vh", // Height for screens 1500px and greater
+        },
         padding: 2,
       }}
       data-testid={COMPONENT_NAME}

@@ -6,10 +6,10 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import { userTypes } from "../../../shared/data/constant";
+import { userTypes } from "../../shared/data/constant";
 import { grey } from "@mui/material/colors";
 import React from "react";
-import { Conversation } from "../../../shared/data/interface";
+import { Conversation } from "../../shared/data/interface";
 
 const ChatBoxItem = styled(Paper)(({ theme }) => {
   return {

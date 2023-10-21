@@ -8,13 +8,13 @@ import { useMutation } from "@tanstack/react-query";
 import { isEmpty } from "lodash";
 
 // openai
-import { handleOpenAIAPI, openAIAPIEnum } from "../../../shared/openai/openAI";
+import { handleOpenAIAPI, openAIAPIEnum } from "../../shared/openai/openAI";
 
 // interface
-import { Conversation } from "../../../shared/data/interface";
+import { Conversation } from "../../shared/data/interface";
 
 // constant
-import { userTypes } from "../../../shared/data/constant";
+import { userTypes } from "../../shared/data/constant";
 // MUI
 import {
   Box,
@@ -26,7 +26,7 @@ import {
 } from "@mui/material";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import CognitiveService from "../common/CognitiveService";
-import { startSpeechSynthesis } from "../../../shared/microsoft/cognitiveService";
+import { startSpeechSynthesis } from "../../shared/microsoft/cognitiveService";
 
 const COMPONENT = "chat_bot_component";
 
@@ -273,10 +273,13 @@ export default function ChatBot() {
     <Box
       data-testid={COMPONENT}
       sx={{
-        height: "auto",
         display: "flex",
         flexDirection: "column",
         gap: 2,
+        height: {
+          xs: "80vh", // Default height for screens less than 1500px
+          md: "85vh", // Height for screens 1500px and greater
+        },
       }}
     >
       {renderChatBox()}

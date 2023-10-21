@@ -1,7 +1,7 @@
 import { Container } from "@mui/material";
 import dynamic from "next/dynamic";
 
-const ChatBot = dynamic(() => import("../client/component/chat/ChatBot"), {
+const ChatBot = dynamic(() => import("../component/chat/ChatBot"), {
   // ssr: false,
 });
 
@@ -12,7 +12,12 @@ const ChatBot = dynamic(() => import("../client/component/chat/ChatBot"), {
  */
 export default function Chat() {
   return (
-    <Container data-testid="chat-page" sx={{ margin: 2 }}>
+    <Container
+      data-testid="chat-page"
+      sx={{
+        margin: 2,
+      }}
+    >
       <ChatBot />
     </Container>
   );

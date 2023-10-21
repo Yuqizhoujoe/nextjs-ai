@@ -180,7 +180,7 @@ export async function getTranslation(userVoiceInput: string, options: Options) {
 export const handleOpenAIAPI = async (params: {
   type: openAIAPIFeatures;
   data: any;
-  options: Options;
+  options?: Options;
 }) => {
   try {
     const { type, data, options } = params;

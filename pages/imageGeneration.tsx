@@ -7,7 +7,7 @@ import { Container } from "@mui/material";
 import dynamic from "next/dynamic";
 
 const ImageGeneration = dynamic(
-  () => import("../client/component/imageGeneration/ImageGeneration"),
+  () => import("../component/imageGeneration/ImageGeneration"),
   {}
 );
 

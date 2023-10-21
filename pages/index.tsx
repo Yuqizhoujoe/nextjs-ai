@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "@mui/material";
 
-const Home: React.FC = () => {
+const Index: React.FC = () => {
   return (
     <Container
       sx={{
@@ -15,4 +15,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Index;

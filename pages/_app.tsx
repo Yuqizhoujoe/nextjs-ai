@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import React from "react";
-import Layout from "../client/container/Layout";
+import Layout from "../container/Layout";
 
 import "../styles/globals.css";
 
