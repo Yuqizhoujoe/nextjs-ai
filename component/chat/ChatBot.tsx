@@ -5,7 +5,7 @@ import ChatBox from "../common/ChatBox";
 import { useMutation } from "@tanstack/react-query";
 
 // utility
-import { isEmpty } from "lodash";
+import _, { isEmpty } from "lodash";
 
 // openai
 import { handleOpenAIAPI, openAIAPIEnum } from "../../shared/openai/openAI";
@@ -25,12 +25,13 @@ import {
   TextField,
 } from "@mui/material";
 import DirectionsIcon from "@mui/icons-material/Directions";
-import CognitiveService from "../common/CognitiveService";
-import { startSpeechSynthesis } from "../../shared/microsoft/cognitiveService";
+import Speech from "../common/Speech";
+import axios from "../../shared/api/axios";
+
+// hooks
+import useSpeech from "../../shared/hooks/useSpeech";
 
 const COMPONENT = "chat_bot_component";
-
-const label = { inputProps: { "aria-label": "switch to voice input" } };
 
 const state = {
   SUCCESS: "success",
@@ -46,9 +47,15 @@ export default function ChatBot() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [switchToVoice, setSwitch] = useState(false);
   const [status, setStatus] = useState<Status>(state.NOTHING);
+  const [language, setLanguage] = useState<string>("en");
+  const [recording, setRecording] = useState<boolean>(false);
+  const [voiceOption, setVoiceOption] = useState<string>("");
 
   // chat box ref
   const chatBoxRef = useRef<HTMLDivElement>(null);
+
+  const { useSpeechSynthesisFromMicrosoft, languageMap, defaultVoice } =
+    useSpeech(recording, voiceOption);
 
   useEffect(() => {
     if (!isEmpty(conversations)) {
@@ -59,7 +66,6 @@ export default function ChatBot() {
   // react query
   const chatBotMutation = useMutation({
     mutationFn: async (userInput: string) => {
-      console.log("chatBotMutation mutationFn");
       setStatus(state.SENT);
 
       return handleOpenAIAPI({
@@ -95,24 +101,23 @@ export default function ChatBot() {
         },
       });
     },
-    onSuccess: (result, userInput, context) => {
-      console.log("chatBotMutation onSuccess");
-      console.log(result);
-
+    onSuccess: (text, userInput, context) => {
+      console.log("CHATBOT_MUTATION_ON_SUCCESS", text);
       setStatus(state.SUCCESS);
 
-      if (switchToVoice)
-        startSpeechSynthesis(result, {
-          handleResult: (audioData) => {
-            // create an instance of BaseAudioPlayer to play the audio
-            const audioElement = new Audio();
-            audioElement.src = URL.createObjectURL(audioData);
-            audioElement.play();
-          },
-        });
+      if (switchToVoice) {
+        useSpeechSynthesisFromMicrosoft({ text, language })
+          .then((audioData) => {
+            console.log(
+              `${COMPONENT.toUpperCase()}_RECEIVE_AUDIO_DATA_FROM_USE_SPEECH_HOOK`,
+              { audioData }
+            );
+          })
+          .catch((error) => console.error(error));
+      }
     },
     onError: (error) => {
-      console.log("chatBotMutation onError");
+      console.log("CHATBOT_MUTATION_ERROR");
       console.error(error);
       setStatus(state.ERROR);
     },
@@ -149,6 +154,7 @@ export default function ChatBot() {
       ];
     });
     setUserInput("");
+    console.log("About handleSubmitInput");
     await chatBotMutation.mutate(userInput);
   };
 
@@ -166,7 +172,7 @@ export default function ChatBot() {
     setSwitch(e.target.checked);
   };
 
-  const handleUserVoiceInput = (text: string) => {
+  const handleUserVoiceInput = async (text: string) => {
     if (isEmpty(text)) return;
     // user input conversation
     setConversations((prevState) => {
@@ -181,7 +187,20 @@ export default function ChatBot() {
         },
       ];
     });
-    chatBotMutation.mutate(text);
+
+    try {
+      // detect language text
+      const languageResult = await axios.post(
+        `/language?action=detect-language`,
+        { text }
+      );
+      const lan = _.get(languageResult, "data.result.iso6391Name", "en");
+      setLanguage(lan.slice(0, 2));
+
+      chatBotMutation.mutate(text);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   // render
@@ -200,7 +219,14 @@ export default function ChatBot() {
         ref={chatBoxRef}
       >
         {conversations.map((conversation, index) => (
-          <ChatBox key={index} conversation={conversation} />
+          <ChatBox
+            key={index}
+            conversation={conversation}
+            voices={languageMap[language.toLowerCase()]}
+            component={COMPONENT}
+            defaultVoice={defaultVoice}
+            changeVoice={setVoiceOption}
+          />
         ))}
       </Box>
     );
@@ -258,10 +284,16 @@ export default function ChatBot() {
   const renderUserInputBox = () => {
     return (
       <Box data-testid={`${COMPONENT}_user_input_box`}>
-        {switchToVoice && (
-          <CognitiveService
+        {switchToVoice && status !== state.SENT && (
+          <Speech
             onTextReceived={handleUserVoiceInput}
             component={COMPONENT}
+            receiveRecordState={(recording) => {
+              console.log("RECEIVE_RECORD_STATE_CHATBOT", {
+                recording,
+              });
+              setRecording(recording);
+            }}
           />
         )}
         {!switchToVoice && renderUserTypeInputBox()}
@@ -278,12 +310,12 @@ export default function ChatBot() {
         gap: 2,
         height: {
           xs: "80vh", // Default height for screens less than 1500px
-          md: "85vh", // Height for screens 1500px and greater
+          xl: "85vh", // Height for screens 1500px and greater
         },
       }}
     >
       {renderChatBox()}
-      <div>
+      <div data-testid={`${COMPONENT}_voice_conversation`}>
         {renderSwitch()}
         {renderUserInputBox()}
       </div>

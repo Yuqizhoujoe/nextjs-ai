@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 
 // component
-import CognitiveService from "../common/CognitiveService";
-import ChatBox from "../common/ChatBox";
-
 // mui
-import { Box, Stack } from "@mui/material";
+import { Box } from "@mui/material";
 
 // next ui
 import { Card, styled, Text } from "@nextui-org/react";
@@ -146,28 +143,28 @@ export default function Translation() {
     }
   };
 
-  const renderTranslationBoxContainer = () => {
-    return (
-      <Stack
-        spacing={2}
-        ref={translationBoxRef}
-        sx={{
-          width: "100%",
-          height: "70vh",
-          // flexGrow: 1,
-          overflow: "scroll",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-        }}
-        data-testid={`${COMPONENT_NAME}_translation_box`}
-      >
-        {conversations.map((conversation) => {
-          return <ChatBox conversation={conversation} key={conversation.id} />;
-        })}
-      </Stack>
-    );
-  };
+  // const renderTranslationBoxContainer = () => {
+  //   return (
+  //     <Stack
+  //       spacing={2}
+  //       ref={translationBoxRef}
+  //       sx={{
+  //         width: "100%",
+  //         height: "70vh",
+  //         // flexGrow: 1,
+  //         overflow: "scroll",
+  //         "&::-webkit-scrollbar": {
+  //           display: "none",
+  //         },
+  //       }}
+  //       data-testid={`${COMPONENT_NAME}_translation_box`}
+  //     >
+  //       {conversations.map((conversation) => {
+  //         return <ChatBox conversation={conversation} key={conversation.id} />;
+  //       })}
+  //     </Stack>
+  //   );
+  // };
 
   return (
     <Box
@@ -184,11 +181,8 @@ export default function Translation() {
       }}
       data-testid={COMPONENT_NAME}
     >
-      {renderTranslationBoxContainer()}
-      <CognitiveService
-        onTextReceived={handleTextReceive}
-        component={COMPONENT_NAME}
-      />
+      {/*{renderTranslationBoxContainer()}*/}
+      {/*<Speech onTextReceived={handleTextReceive} component={COMPONENT_NAME} />*/}
     </Box>
   );
 }

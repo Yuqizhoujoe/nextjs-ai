@@ -1,18 +1,19 @@
 import * as React from "react";
 
 // component
-import Search from "../component/common/Search";
-
 // MUI
-import { Box, Container } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
 
 // nextjs
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
-import Button from "../component/common/Button";
 import { useRouter } from "next/router";
+import Link from "next/link";
+
+// Next Auth
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const pages = [
   {
@@ -47,28 +48,67 @@ const HeaderBox = styled(Box)(({ theme }) => {
 
 export default function Header() {
   const router = useRouter();
+  const { data: session } = useSession();
 
-  const handleClick = async (e: any, url: string) => {
-    e.preventDefault();
+  const handleClick = async (url: string) => {
     await router.push(url);
   };
 
   const renderPages = () => {
     return pages.map((page) => {
       return (
-        <div key={page.key}>
-          <Button
-            key={page.key}
-            id={page.key}
-            type="button"
-            style="purple_to_blue"
-            clickFn={(e) => handleClick(e, page.url)}
-          >
-            {page.page}
-          </Button>
-        </div>
+        <Button
+          key={page.key}
+          color="primary"
+          variant="text"
+          onClick={() => handleClick(page.url)}
+        >
+          {page.page}
+        </Button>
       );
     });
+  };
+
+  const renderAuthBtn = () => {
+    if (session) {
+      return (
+        <Button
+          color="secondary"
+          size="large"
+          variant="text"
+          onClick={() =>
+            signOut({
+              redirect: true,
+              callbackUrl: "/",
+            })
+          }
+        >
+          Sign out
+        </Button>
+      );
+    }
+
+    return (
+      // <Paper
+      //   elevation={0}
+      //   sx={{
+      //     margin: 1,
+      //     display: "flex",
+      //     justifyContent: "center",
+      //     flexDirection: "column",
+      //   }}
+      // >
+      //   <GoogleButton onClick={() => signIn()} />
+      // </Paper>
+      <Button
+        color="error"
+        size="large"
+        variant="text"
+        onClick={() => signIn()}
+      >
+        Sign In
+      </Button>
+    );
   };
 
   return (
@@ -76,13 +116,15 @@ export default function Header() {
       <HeaderBox sx={{ boxShadow: 2 }}>
         <Container sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <IconButton
-              color="primary"
-              sx={{ p: "10px" }}
-              aria-label="directions"
-            >
-              <HomeIcon color="primary" />
-            </IconButton>
+            <Link href="/">
+              <IconButton
+                color="primary"
+                sx={{ p: "10px" }}
+                aria-label="directions"
+              >
+                <HomeIcon color="primary" />
+              </IconButton>
+            </Link>
           </Box>
           <Box
             sx={{
@@ -92,6 +134,7 @@ export default function Header() {
               marginLeft: 1,
             }}
           >
+            {renderAuthBtn()}
             {renderPages()}
           </Box>
         </Container>

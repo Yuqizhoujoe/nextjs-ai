@@ -16,7 +16,6 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 import { useMutation } from "@tanstack/react-query";
 import { handleOpenAIAPI, openAIAPIEnum } from "../../shared/openai/openAI";
 import Paper from "@mui/material/Paper";
-import { Simulate } from "react-dom/test-utils";
 
 const COMPONENT_NAME = "image_generation_component";
 

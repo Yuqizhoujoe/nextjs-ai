@@ -14,6 +14,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // Next UI
 import { NextUIProvider } from "@nextui-org/react";
 
+// Next Auth
+// context
+import { AppProvider } from "../shared/context";
+
+// firebase
+
 interface ContainerProps {
   children: ReactNode;
 }
@@ -62,19 +68,21 @@ const client = new QueryClient();
 
 function Layout({ children }: ContainerProps): JSX.Element {
   return (
-    <QueryClientProvider client={client}>
-      <NextUIProvider>
-        <ThemeProvider theme={theme}>
-          <MainContainer data-testid="layout-container">
-            <Header />
-            <ChildrenContainer data-testid="main-content-container">
-              {children}
-            </ChildrenContainer>
-            <Footer />
-          </MainContainer>
-        </ThemeProvider>
-      </NextUIProvider>
-    </QueryClientProvider>
+    <AppProvider>
+      <QueryClientProvider client={client}>
+        <NextUIProvider>
+          <ThemeProvider theme={theme}>
+            <MainContainer data-testid="layout-container">
+              <Header />
+              <ChildrenContainer data-testid="main-content-container">
+                {children}
+              </ChildrenContainer>
+              <Footer />
+            </MainContainer>
+          </ThemeProvider>
+        </NextUIProvider>
+      </QueryClientProvider>
+    </AppProvider>
   );
 }
 

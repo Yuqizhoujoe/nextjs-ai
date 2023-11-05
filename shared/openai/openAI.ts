@@ -51,12 +51,12 @@ async function getChatComplete(prompt: string, options: Options) {
   ];
 
   const completions = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4",
     messages,
     stream: !options.voiceInput,
   });
 
-  console.log("openai.createChatCompletion: ", completions);
+  console.log("GET_CHAT_COMPLETE_OPENAI_RESULT", completions);
 
   return completions;
 }
@@ -118,13 +118,14 @@ async function* readChatCompleteStreamData(completions) {
 }
 
 export async function getChatResponse(prompt: string, options: Options) {
-  console.log("Sending chat request to OpenAI getChatResponse:", prompt);
+  console.log("GET_CHAT_RESPONSE_PROMPT", prompt);
 
   // add one more chat box
   options.addItem();
 
   const completions = await getChatComplete(prompt, options);
 
+  // get the data directly
   if (options.voiceInput) {
     const content = _.get(completions, "data.choices[0].message.content");
     options.handleResult(content);
