@@ -25,7 +25,23 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# Firebase cache
+.firebase/
+.firebaserc
+
+# Firebase CLI log files
+firebase-debug.log
+firebase-debug.*.log
+*.log
+
+# Hosting configuration files
+.firebasehosting.*
 
 # vercel
 .vercel
@@ -37,3 +53,11 @@ next-env.d.ts
 # cypress
 /cypress/screenshots
 /cypress/videos
+
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/nextjs-ai-cypress.iml
+/.idea/prettier.xml
+/.idea/vcs.xml
+
+/data
