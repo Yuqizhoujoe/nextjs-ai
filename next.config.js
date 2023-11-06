@@ -17,5 +17,7 @@ module.exports = {
     GOOGLE_MESSAGING_SENDER_ID: process.env.GOOGLE_MESSAGING_SENDER_ID,
     GOOGLE_APP_ID: process.env.GOOGLE_APP_ID,
     GOOGLE_MEASUREMENT_ID: process.env.GOOGLE_MEASUREMENT_ID,
+
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   },
 };
