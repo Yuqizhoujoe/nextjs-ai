@@ -1,8 +1,18 @@
+"use client";
 import * as React from "react";
+import { useEffect, useState } from "react";
 
 // component
 // MUI
-import { Box, Button, Container } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
 import { grey } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
 
@@ -14,6 +24,7 @@ import Link from "next/link";
 
 // Next Auth
 import { signIn, signOut, useSession } from "next-auth/react";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const pages = [
   {
@@ -39,6 +50,10 @@ const pages = [
 ];
 
 const HeaderBox = styled(Box)(({ theme }) => {
+  console.log("HEADER_BOX_THEME", {
+    theme,
+  });
+
   return {
     position: "static",
     backgroundColor: grey[50],
@@ -49,6 +64,21 @@ const HeaderBox = styled(Box)(({ theme }) => {
 export default function Header() {
   const router = useRouter();
   const { data: session } = useSession();
+
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number>(null);
+
+  // Effect to handle the resize event
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener when the component unmounts
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleClick = async (url: string) => {
     await router.push(url);
@@ -89,17 +119,6 @@ export default function Header() {
     }
 
     return (
-      // <Paper
-      //   elevation={0}
-      //   sx={{
-      //     margin: 1,
-      //     display: "flex",
-      //     justifyContent: "center",
-      //     flexDirection: "column",
-      //   }}
-      // >
-      //   <GoogleButton onClick={() => signIn()} />
-      // </Paper>
       <Button
         color="error"
         size="large"
@@ -108,6 +127,60 @@ export default function Header() {
       >
         Sign In
       </Button>
+    );
+  };
+
+  const renderDrawerContents = () => {
+    return (
+      <Box role="presentation" onClick={() => setOpenDrawer(false)}>
+        <List>
+          {pages.map((page) => (
+            <ListItemButton key={page.key} sx={{ justifyContent: "center" }}>
+              <Link href={page.url}>
+                <ListItemText secondary={page.page} />
+              </Link>
+            </ListItemButton>
+          ))}
+        </List>
+      </Box>
+    );
+  };
+
+  const renderDrawer = () => {
+    return (
+      <>
+        <Button color="primary" onClick={() => setOpenDrawer(true)}>
+          <MenuIcon />
+        </Button>
+        <Drawer
+          anchor="right"
+          open={openDrawer}
+          onClose={() => setOpenDrawer(false)}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            "& .MuiPaper-root": {
+              // backgroundColor: "#e2e0e0",
+            },
+          }}
+        >
+          {renderDrawerContents()}
+        </Drawer>
+      </>
+    );
+  };
+
+  const renderHeaderContents = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        {renderAuthBtn()}
+        {windowWidth < 500 && renderDrawer()}
+        {windowWidth >= 500 && renderPages()}
+      </Box>
     );
   };
 
@@ -126,17 +199,7 @@ export default function Header() {
               </IconButton>
             </Link>
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              minWidth: 563,
-              marginLeft: 1,
-            }}
-          >
-            {renderAuthBtn()}
-            {renderPages()}
-          </Box>
+          {renderHeaderContents()}
         </Container>
       </HeaderBox>
     </div>

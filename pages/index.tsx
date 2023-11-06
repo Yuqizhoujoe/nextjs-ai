@@ -10,7 +10,10 @@ const Index: React.FC = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "95vh",
+        height: {
+          xs: "80vh",
+          lg: "95vh", // Height for screens 1500px and greater
+        },
         width: "100vw",
       }}
     >
@@ -18,12 +21,15 @@ const Index: React.FC = () => {
         sx={{
           position: "relative",
           overflow: "hidden", // Ensures the image respects the border radius
-          borderRadius: "50%", // Makes the container rounded
-          height: 500,
-          width: 500,
         }}
       >
-        <Image src="/jojo.jpeg" alt="JOJO" layout="fill" objectFit="cover" />
+        <Image
+          src="/jojo.png"
+          alt="JOJO"
+          objectFit="cover"
+          height={500}
+          width={500}
+        />
       </Box>
     </Container>
   );

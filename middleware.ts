@@ -4,9 +4,11 @@ import { NextResponse } from "next/server";
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   const cookies = request.cookies.getAll();
-  let session = request.cookies.get("next-auth.session-token");
+  let session;
   if (process.env.NODE_ENV === "production") {
-    session = request.cookies.get("__Secure-next-auth.callback-url");
+    session = request.cookies.get("__Secure-next-auth.session-token");
+  } else {
+    session = request.cookies.get("next-auth.session-token");
   }
   console.log("MIDDLEWARE", {
     cookies,

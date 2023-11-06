@@ -54,7 +54,7 @@ const theme = createTheme({
 // Define a styled component that uses the theme breakpoints
 const MainContainer = styled("div")(({ theme }) => {
   return {
-    height: "100vh",
+    height: "90vh",
   };
 });
 
