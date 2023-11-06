@@ -5,7 +5,7 @@ name: Deploy to Firebase Hosting on PR
 on:
   pull_request:
     branches:
-      - release # This will trigger the workflow only when a PR is made to the 'release' branch
+    - RELEASE
 
 
 jobs:
