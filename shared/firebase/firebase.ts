@@ -7,14 +7,14 @@ import { getAuth } from "@firebase/auth";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAEPe__RN2M__xNstUC1PDR8_V3FUdzsHc",
-  authDomain: "jojo-nextjs-ai.firebaseapp.com",
-  databaseURL: "https://jojo-nextjs-ai-default-rtdb.firebaseio.com",
-  projectId: "jojo-nextjs-ai",
-  storageBucket: "jojo-nextjs-ai.appspot.com",
-  messagingSenderId: "580697794238",
-  appId: "1:580697794238:web:b6650bd14ec88296e860ef",
-  measurementId: "G-N3GR08N9H6",
+  apiKey: process.env.GOOGLE_API_KEY,
+  authDomain: process.env.GOOGLE_AUTH_DOMAIN,
+  databaseURL: process.env.GOOGLE_DATABASE_URL,
+  projectId: process.env.GOOGLE_PROJECT_ID,
+  storageBucket: process.env.GOOGLE_STORAGE_BUCKET,
+  messagingSenderId: process.env.GOOGLE_MESSAGING_SENDER_ID,
+  appId: process.env.GOOGLE_APP_ID,
+  measurementId: process.env.GOOGLE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
