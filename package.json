@@ -21,6 +21,7 @@
     "@nextui-org/react": "^1.0.0-beta.12",
     "@tanstack/react-query": "^4.29.5",
     "@types/http-errors": "^2.0.1",
+    "@vercel/analytics": "^1.1.1",
     "axios": "^1.4.0",
     "eventsource-parser": "^1.0.0",
     "firebase": "^9.21.0",
