@@ -267,7 +267,7 @@ export default function ChatBot() {
 
   const renderSwitch = () => {
     return (
-      <Box sx={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <FormControl>
           <FormControlLabel
             label="Switch to voice input"

@@ -14,9 +14,11 @@ export default function Chat() {
   return (
     <Container
       data-testid="chat-page"
-      sx={{
-        margin: 2,
-      }}
+      sx={
+        {
+          // margin: 2,
+        }
+      }
     >
       <ChatBot />
     </Container>

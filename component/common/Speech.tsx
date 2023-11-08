@@ -175,6 +175,11 @@ const Speech: React.FC<SpeechRecognizerProps> = ({
           color="primary"
           size="large"
           aria-label="voice"
+          sx={{
+            padding: "1rem",
+            marginTop: "1rem",
+            backgroundColor: `${!isRecording ? "#c9c8c8 !important" : ""}`,
+          }}
           onClick={handleVoiceBtnClick}
           data-testid={`${component}_speech_voice_input_button`}
         >

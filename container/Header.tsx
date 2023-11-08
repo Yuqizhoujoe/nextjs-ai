@@ -12,6 +12,7 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  Paper,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
@@ -25,6 +26,7 @@ import Link from "next/link";
 // Next Auth
 import { signIn, signOut, useSession } from "next-auth/react";
 import MenuIcon from "@mui/icons-material/Menu";
+import Image from "next/image";
 
 const pages = [
   {
@@ -50,10 +52,6 @@ const pages = [
 ];
 
 const HeaderBox = styled(Box)(({ theme }) => {
-  console.log("HEADER_BOX_THEME", {
-    theme,
-  });
-
   return {
     position: "static",
     backgroundColor: grey[50],
@@ -66,7 +64,7 @@ export default function Header() {
   const { data: session } = useSession();
 
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [windowWidth, setWindowWidth] = useState<number>(null);
+  const [windowWidth, setWindowWidth] = useState<number | undefined>(undefined);
 
   // Effect to handle the resize event
   useEffect(() => {
@@ -75,6 +73,9 @@ export default function Header() {
     };
 
     window.addEventListener("resize", handleResize);
+
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
 
     // Clean up the event listener when the component unmounts
     return () => window.removeEventListener("resize", handleResize);
@@ -184,6 +185,29 @@ export default function Header() {
     );
   };
 
+  const renderAvatar = () => {
+    if (session) {
+      const { user } = session;
+      const { image, name } = user;
+      return (
+        <Link href="/user">
+          <Paper
+            sx={{
+              borderRadius: "50%",
+              overflow: "hidden",
+              border: "2px solid #000",
+              display: "inline-block",
+              lineHeight: 0, // Removes extra space that inline-block elements can have below them
+            }}
+          >
+            <Image src={image} alt={name} height={35} width={35} />
+          </Paper>
+        </Link>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="w-full" data-testid="header-container">
       <HeaderBox sx={{ boxShadow: 2 }}>
@@ -198,6 +222,7 @@ export default function Header() {
                 <HomeIcon color="primary" />
               </IconButton>
             </Link>
+            {renderAvatar()}
           </Box>
           {renderHeaderContents()}
         </Container>

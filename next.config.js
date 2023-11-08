@@ -1,4 +1,7 @@
 module.exports = {
+  images: {
+    domains: ["lh3.googleusercontent.com"],
+  },
   env: {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     MICROSOFT_SPEECH_KEY: process.env.MICROSOFT_SPEECH_KEY,

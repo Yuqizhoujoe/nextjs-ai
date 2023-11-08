@@ -131,7 +131,7 @@ export default function ChatBox({
         <Typography color={isChatBot ? grey[300] : grey[500]}>
           {conversation.date.toLocaleTimeString()}
         </Typography>
-        {isChatBot && renderLanguageDropdown()}
+        {/*{isChatBot && renderLanguageDropdown()}*/}
       </Stack>
       <Stack direction="row" spacing={3} sx={{ alignItems: "center" }}>
         {renderAvatar(conversation)}

@@ -24,7 +24,7 @@ const Index: React.FC = () => {
         }}
       >
         <Image
-          src="/jojo.png"
+          src="/makima.jpeg"
           alt="JOJO"
           objectFit="cover"
           height={500}
