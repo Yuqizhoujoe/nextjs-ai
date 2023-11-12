@@ -1,3 +1,6 @@
-export const isAsyncGenerator = (generator: any): boolean => {
-  return generator.constructor.name === "GeneratorFunction";
+export const mapCountryCode = () => {};
+
+export const formatName = (voiceName: string) => {
+  const index = voiceName.indexOf("Neural");
+  return voiceName.slice(6, index);
 };

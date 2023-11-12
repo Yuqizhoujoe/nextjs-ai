@@ -44,6 +44,11 @@ async function detectTextLanguage(
     const language = _.get(result, "[0].primaryLanguage", {});
     console.log("LANGUAGE_DETECTION", JSON.stringify(language));
 
+    // {
+    //   "name": "Chinese_Simplified",
+    //     "iso6391Name": "zh_chs",
+    //     "confidenceScore": 1
+    // }
     res
       .status(200)
       .json({ message: "DETECT LANGUAGE SUCCESSFUL", result: language });

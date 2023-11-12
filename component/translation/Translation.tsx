@@ -19,7 +19,7 @@ import { isEmpty } from "lodash";
 // constant
 import { userTypes } from "../../shared/data/constant";
 // interface
-import { Conversation } from "../../shared/data/interface";
+import { Conversation } from "../../shared/data/type";
 
 const COMPONENT_NAME = "translation_component";
 

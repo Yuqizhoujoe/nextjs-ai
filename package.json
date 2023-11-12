@@ -19,6 +19,8 @@
     "@mui/material": "^5.12.2",
     "@mui/material-next": "^6.0.0-alpha.83",
     "@nextui-org/react": "^1.0.0-beta.12",
+    "@react-three/drei": "^9.88.11",
+    "@react-three/fiber": "^8.15.10",
     "@tanstack/react-query": "^4.29.5",
     "@types/http-errors": "^2.0.1",
     "@vercel/analytics": "^1.1.1",
@@ -28,13 +30,16 @@
     "firebaseui": "^6.1.0",
     "http-errors": "^2.0.0",
     "lodash": "^4.17.21",
+    "material-ui-flags": "^1.2.4",
     "microsoft-cognitiveservices-speech-sdk": "^1.28.0",
     "next": "latest",
     "next-auth": "^4.24.4",
     "openai": "^3.2.1",
     "react": "18.2.0",
+    "react-audio-player": "^0.17.0",
     "react-dom": "18.2.0",
-    "react-google-button": "^0.7.2"
+    "react-google-button": "^0.7.2",
+    "three": "^0.158.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.5",

@@ -1,95 +1,130 @@
 import { useEffect, useState } from "react";
-import _ from "lodash";
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 import { ResultReason } from "microsoft-cognitiveservices-speech-sdk";
+import { COUNTRY_DATA } from "../data/type";
 
-const defaultLanguage = "en-US-JennyNeural";
-const languageMap = {
-  ko: [
-    "ko-KR-SunHiNeural",
-    "ko-KR-InJoonNeural",
-    "ko-KR-BongJinNeural",
-    "ko-KR-GookMinNeural",
-    "ko-KR-JiMinNeural",
-    "ko-KR-SeoHyeonNeural",
-    "ko-KR-SoonBokNeural",
-    "ko-KR-YuJinNeural",
-  ],
-  ja: [
-    "ja-JP-NanamiNeural",
-    "ja-JP-KeitaNeural",
-    "ja-JP-AoiNeural",
-    "ja-JP-DaichiNeural",
-    "ja-JP-MayuNeural",
-    "ja-JP-NaokiNeural",
-    "ja-JP-ShioriNeural",
-  ],
-  zh: [
-    "zh-CN-XiaoxiaoNeural",
-    "zh-CN-YunxiNeural",
-    "zh-CN-YunjianNeural",
-    "zh-CN-XiaoyiNeural",
-    "zh-CN-YunyangNeural",
-    "zh-CN-XiaochenNeural",
-    "zh-CN-XiaohanNeural",
-    "zh-CN-XiaomengNeural",
-    "zh-CN-XiaomoNeural",
-    "zh-CN-XiaoqiuNeural",
-    "zh-CN-XiaoruiNeural",
-    "zh-CN-XiaoshuangNeural",
-  ],
-  en: [
-    "en-US-JennyMultilingualNeural",
-    "en-US-JennyNeural",
-    "en-US-GuyNeural",
-    "en-US-AriaNeural",
-    "en-US-DavisNeural",
-    "en-US-AmberNeural",
-    "en-US-AnaNeural",
-    "en-US-AshleyNeural",
-    "en-US-BrandonNeural",
-    "en-US-ChristopherNeural",
-    "en-US-CoraNeural",
-    "en-US-ElizabethNeural",
-    "en-US-EricNeural",
-    "en-US-JacobNeural",
-    "en-US-JaneNeural",
-    "en-US-JasonNeural",
-    "en-US-MichelleNeural",
-    "en-US-MonicaNeural",
-    "en-US-NancyNeural",
-    "en-US-RogerNeural",
-    "en-US-SaraNeural",
-    "en-US-SteffanNeural",
-    "en-US-TonyNeural",
-    "en-US-AIGenerate1Neural",
-    "en-US-AndrewNeural",
-    "en-US-BlueNeural",
-    "en-US-BrianNeural",
-    "en-US-EmmaNeural",
-    "en-US-JennyMultilingualV2Neural",
-    "en-US-RyanMultilingualNeural",
-  ],
+const DEFAULT_CN_VOICE = "zh-CN-XiaoxiaoNeural";
+const DEFAULT_US_VOICE = "en-US-JennyMultilingualNeural";
+const DEFAULT_KR_VOICE = "ko-KR-SunHiNeural";
+const DEFAULT_JP_VOICE = "ja-JP-NanamiNeural";
+
+const LanVoicesMapping = {
+  ko: {
+    female: [
+      "ko-KR-SunHiNeural",
+      "ko-KR-JiMinNeural",
+      "ko-KR-SeoHyeonNeural",
+      "ko-KR-SoonBokNeural",
+    ],
+    male: [
+      "ko-KR-InJoonNeural",
+      "ko-KR-BongJinNeural",
+      "ko-KR-GookMinNeural",
+      "ko-KR-YuJinNeural",
+    ],
+  },
+  ja: {
+    female: [
+      "ja-JP-NanamiNeural",
+      "ja-JP-AoiNeural",
+      "ja-JP-MayuNeural",
+      "ja-JP-ShioriNeural",
+    ],
+    male: ["ja-JP-KeitaNeural", "ja-JP-DaichiNeural", "ja-JP-NaokiNeural"],
+  },
+  zh: {
+    female: [
+      "zh-CN-XiaoxiaoNeural",
+      "zh-CN-XiaoyiNeural",
+      "zh-CN-XiaochenNeural",
+      "zh-CN-XiaohanNeural",
+      "zh-CN-XiaomengNeural",
+      "zh-CN-XiaomoNeural",
+      "zh-CN-XiaoqiuNeural",
+      "zh-CN-XiaoruiNeural",
+      "zh-CN-XiaoshuangNeural",
+    ],
+    male: ["zh-CN-YunxiNeural", "zh-CN-YunjianNeural", "zh-CN-YunyangNeural"],
+  },
+  en: {
+    female: [
+      "en-US-JennyMultilingualNeural",
+      "en-US-JennyNeural",
+      "en-US-AriaNeural",
+      "en-US-AmberNeural",
+      "en-US-ElizabethNeural",
+      "en-US-JaneNeural",
+      "en-US-MichelleNeural",
+      "en-US-MonicaNeural",
+      "en-US-NancyNeural",
+      "en-US-JennyMultilingualV2Neural",
+      "en-US-AIGenerate1Neural",
+      "en-US-SaraNeural",
+      "en-US-EmmaNeural",
+    ],
+    male: [
+      "en-US-GuyNeural",
+      "en-US-DavisNeural",
+      "en-US-AshleyNeural",
+      "en-US-BrandonNeural",
+      "en-US-ChristopherNeural",
+      "en-US-CoraNeural",
+      "en-US-EricNeural",
+      "en-US-JacobNeural",
+      "en-US-JasonNeural",
+      "en-US-RogerNeural",
+      "en-US-SteffanNeural",
+      "en-US-TonyNeural",
+      "en-US-AndrewNeural",
+      "en-US-BlueNeural",
+      "en-US-BrianNeural",
+      "en-US-RyanMultilingualNeural",
+    ],
+  },
 };
+const SupportedCountriesData: COUNTRY_DATA[] = [
+  {
+    countryCode: "us",
+    countryName: "USA",
+    locale: "en-US",
+    language: "en",
+  },
+  {
+    countryCode: "cn",
+    countryName: "China",
+    locale: "zh-CN",
+    language: "zh",
+  },
+  {
+    countryCode: "kr",
+    countryName: "Korea",
+    locale: "ko-KR",
+    language: "ko",
+  },
+  {
+    countryCode: "jp",
+    countryName: "Japan",
+    locale: "ja-JP",
+    language: "ja",
+  },
+];
 
-const useSpeech = (recording?: boolean, voiceOption?: string) => {
-  const [voice, setVoice] = useState<string>(defaultLanguage);
-  const [text, setText] = useState<string>("");
+const useSpeech = (recording?: boolean) => {
   const [player, setPlayer] = useState<sdk.SpeakerAudioDestination>(null);
   const [synthesizer, setSynthesizer] = useState<sdk.SpeechSynthesizer>(null);
 
-  const mapLanguage = (language?: string) => {
-    if (_.isEmpty(language)) return defaultLanguage;
-    const lan = language.toLowerCase();
-    const lanArray = languageMap[lan];
-    const index = Math.floor(Math.random() * lanArray.length);
-    return lanArray[index];
+  const stopPlayAudioWhenRecording = () => {
+    console.log("STOP_PLAYING_AUDIO", {
+      player,
+    });
+
+    if (player) {
+      player.pause();
+    }
   };
 
   useEffect(() => {
     return () => {
-      setVoice("");
-
       if (player) {
         player.close();
         setPlayer(null);
@@ -102,46 +137,26 @@ const useSpeech = (recording?: boolean, voiceOption?: string) => {
   }, []);
 
   useEffect(() => {
-    stopPlayAudioWhenRecording();
+    if (recording) {
+      stopPlayAudioWhenRecording();
+    }
   }, [recording]);
 
-  useEffect(() => {
-    if (voiceOption !== voice) {
-      stopPlayAudioWhenRecording();
-      useSpeechSynthesisFromMicrosoft({ text }).then(() => {
-        console.log("SYNTHESIZING_AFTEQR_CHANGE_VOICE");
-      });
-    }
-  }, [voiceOption]);
-
-  const stopPlayAudioWhenRecording = () => {
-    console.log("STOP_PLAYING_AUDIO", {
-      player,
-    });
-
-    if (player) {
-      player.pause();
-    }
-  };
-
   const useSpeechSynthesisFromMicrosoft = ({
-    language,
+    voiceName,
     text,
   }: {
-    language?: string;
+    voiceName?: string;
     text: string;
   }) => {
     return new Promise((resolve, reject) => {
       try {
-        const voice = voiceOption || mapLanguage(language);
+        const voice = voiceName ? voiceName : DEFAULT_CN_VOICE;
 
         console.log("SYNTHESIZER_MEMO", {
           text,
           voice,
         });
-
-        setText(text);
-        setVoice(voice);
 
         const speaker = new sdk.SpeakerAudioDestination();
         const audioConfig = sdk.AudioConfig.fromSpeakerOutput(speaker);
@@ -180,8 +195,8 @@ const useSpeech = (recording?: boolean, voiceOption?: string) => {
   };
 
   return {
-    languageMap,
-    defaultVoice: voice,
+    LanVoicesMapping,
+    SupportedCountriesData,
     useSpeechSynthesisFromMicrosoft,
   };
 };

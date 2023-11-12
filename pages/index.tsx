@@ -6,7 +6,11 @@ import { Box, Container } from "@mui/material";
 const Index: React.FC = () => {
   return (
     <Container
+      data-testid="home-page"
       sx={{
+        padding: {
+          mobile: 0,
+        },
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

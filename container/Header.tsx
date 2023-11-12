@@ -196,7 +196,7 @@ export default function Header() {
               borderRadius: "50%",
               overflow: "hidden",
               border: "2px solid #000",
-              display: "inline-block",
+              display: "display",
               lineHeight: 0, // Removes extra space that inline-block elements can have below them
             }}
           >

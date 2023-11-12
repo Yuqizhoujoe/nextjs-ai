@@ -47,12 +47,6 @@ const Speech: React.FC<SpeechRecognizerProps> = ({
     const volumeData = new Uint8Array(bufferLength);
 
     const startTime = new Date().getTime();
-
-    console.log("SET_UP_AUDIO_CONTEXT", {
-      analyser,
-      stream,
-      volumeData,
-    });
     const detectSound = () => {
       const currentTime = new Date().getTime();
 

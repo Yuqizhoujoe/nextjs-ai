@@ -33,6 +33,10 @@ const theme = createTheme({
       md: 960,
       lg: 1280,
       xl: 1920,
+      laptop: 1024,
+      tablet: 640,
+      mobile: 0,
+      desktop: 1280,
     },
   },
   typography: {
@@ -55,6 +59,7 @@ const theme = createTheme({
 const MainContainer = styled("div")(({ theme }) => {
   return {
     height: "90vh",
+    overflow: "auto",
   };
 });
 
@@ -74,7 +79,10 @@ function Layout({ children }: ContainerProps): JSX.Element {
           <ThemeProvider theme={theme}>
             <MainContainer data-testid="layout-container">
               <Header />
-              <ChildrenContainer data-testid="main-content-container">
+              <ChildrenContainer
+                data-testid="main-content-container"
+                sx={{ padding: { mobile: 0 } }}
+              >
                 {children}
               </ChildrenContainer>
               <Footer />
