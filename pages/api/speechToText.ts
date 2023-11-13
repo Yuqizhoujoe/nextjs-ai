@@ -41,9 +41,45 @@ async function POST(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   }
 }
 
-async function convertAudioToText(audioData) {
+async function checkAudioFile(filePath: string) {
+  try {
+    // Check if file exists
+    // The stat() function returns a stat object, which contains information about the file, such as the size, permissions, and modification time.
+    const stats = await promises.stat(filePath);
+
+    console.log("FILE_INFO", { fileInfo: stats });
+
+    // Check if file is not empty (size greater than 0)
+    if (stats.size > 0) {
+      console.log("FILE_EXIST_AND_NOT_EMPTY");
+      return true;
+    } else {
+      console.error("FILE_EXIST_BUT_EMPTY");
+      throw new Error("FILE_EXIST_BUT_EMPTY");
+    }
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      // File does not exist
+      console.error("FILE_NOT_EXIST", { error });
+    } else {
+      // Other errors
+      console.error("OTHER_FILE_ERROR", { error });
+    }
+
+    throw error;
+  }
+}
+
+async function convertAudioToText(audioData: any) {
   const inputPath = "/tmp/input.webm";
   await promises.writeFile(inputPath, audioData);
+
+  const eligibleAudioFile = await checkAudioFile(inputPath);
+
+  console.log("OPEN_AI_TRANSCRIPTION_PARAMS", {
+    audioData,
+    eligibleAudioFile,
+  });
 
   const response = await openai.createTranscription(
     // @ts-ignore
