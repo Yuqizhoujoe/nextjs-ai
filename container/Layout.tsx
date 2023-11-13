@@ -1,4 +1,3 @@
-"use client";
 import React, { ReactNode } from "react";
 
 // Material UI
@@ -8,9 +7,6 @@ import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 // components
 import Header from "./Header";
 import Footer from "./Footer";
-
-// React query
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Next UI
 import { NextUIProvider } from "@nextui-org/react";
@@ -70,27 +66,23 @@ const ChildrenContainer = styled(Container)(({ theme }) => {
   };
 });
 
-const client = new QueryClient();
-
 function Layout({ children }: ContainerProps): JSX.Element {
   return (
     <AppProvider>
-      <QueryClientProvider client={client}>
-        <NextUIProvider>
-          <ThemeProvider theme={theme}>
-            <MainContainer data-testid="layout-container">
-              <Header />
-              <ChildrenContainer
-                data-testid="main-content-container"
-                sx={{ padding: { mobile: 0 } }}
-              >
-                {children}
-              </ChildrenContainer>
-              <Footer />
-            </MainContainer>
-          </ThemeProvider>
-        </NextUIProvider>
-      </QueryClientProvider>
+      <NextUIProvider>
+        <ThemeProvider theme={theme}>
+          <MainContainer data-testid="layout-container">
+            <Header />
+            <ChildrenContainer
+              data-testid="main-content-container"
+              sx={{ padding: { mobile: 0 } }}
+            >
+              {children}
+            </ChildrenContainer>
+            <Footer />
+          </MainContainer>
+        </ThemeProvider>
+      </NextUIProvider>
     </AppProvider>
   );
 }
