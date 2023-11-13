@@ -8,9 +8,6 @@ import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Header from "./Header";
 import Footer from "./Footer";
 
-// Next UI
-import { NextUIProvider } from "@nextui-org/react";
-
 // Next Auth
 // context
 import { AppProvider } from "../shared/context";
@@ -69,20 +66,18 @@ const ChildrenContainer = styled(Container)(({ theme }) => {
 function Layout({ children }: ContainerProps): JSX.Element {
   return (
     <AppProvider>
-      <NextUIProvider>
-        <ThemeProvider theme={theme}>
-          <MainContainer data-testid="layout-container">
-            <Header />
-            <ChildrenContainer
-              data-testid="main-content-container"
-              sx={{ padding: { mobile: 0 } }}
-            >
-              {children}
-            </ChildrenContainer>
-            <Footer />
-          </MainContainer>
-        </ThemeProvider>
-      </NextUIProvider>
+      <ThemeProvider theme={theme}>
+        <MainContainer data-testid="layout-container">
+          <Header />
+          <ChildrenContainer
+            data-testid="main-content-container"
+            sx={{ padding: { mobile: 0 } }}
+          >
+            {children}
+          </ChildrenContainer>
+          <Footer />
+        </MainContainer>
+      </ThemeProvider>
     </AppProvider>
   );
 }

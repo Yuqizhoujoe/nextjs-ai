@@ -85,17 +85,14 @@ const Speech: React.FC<SpeechRecognizerProps> = ({
         const newMediaRecorder = new MediaRecorder(stream);
 
         newMediaRecorder.onstart = () => {
-          console.log("MEDIA_RECORD_START");
           chunks = [];
         };
         newMediaRecorder.ondataavailable = (e) => {
-          console.log("MEDIA_RECORD_DATA", { data: e.data });
           chunks.push(e.data);
         };
         setUpAudioContext(stream);
 
         newMediaRecorder.onstop = async () => {
-          console.log("MEDIA_RECORD_ONSTOP");
           const audioBlob = new Blob(chunks, { type: "audio/webm" });
           try {
             const reader = new FileReader();
@@ -140,7 +137,6 @@ const Speech: React.FC<SpeechRecognizerProps> = ({
   };
 
   const stopRecording = () => {
-    console.log("STOP_RECORDING");
     if (mediaRecorder) {
       mediaRecorder.stop();
       setIsRecording(false);

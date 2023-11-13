@@ -114,10 +114,6 @@ const useSpeech = (recording?: boolean) => {
   const [synthesizer, setSynthesizer] = useState<sdk.SpeechSynthesizer>(null);
 
   const stopPlayAudioWhenRecording = () => {
-    console.log("STOP_PLAYING_AUDIO", {
-      player,
-    });
-
     if (player) {
       player.pause();
     }

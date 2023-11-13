@@ -15,13 +15,6 @@ export async function middleware(request: NextRequest) {
   } else {
     session = request.cookies.get("next-auth.session-token");
   }
-  console.log("MIDDLEWARE", {
-    cookies,
-    session,
-    url: request.url,
-    nextUrl: request.nextUrl,
-    env: process.env.NODE_ENV,
-  });
   if (!session)
     return NextResponse.redirect(
       `${request.nextUrl.origin}/api/auth/signin?callbackUrl=${request.url}`
@@ -31,5 +24,5 @@ export async function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/chat", "/imageGeneration", "/search", "/translation", "/user"],
+  matcher: ["/chat", "/search", "/user"],
 };

@@ -35,16 +35,6 @@ const pages = [
     url: "/chat",
   },
   {
-    key: "imageGeneration",
-    page: "Image Generation",
-    url: "/imageGeneration",
-  },
-  {
-    key: "translation",
-    page: "Translation",
-    url: "/translation",
-  },
-  {
     key: "search",
     page: "Search",
     url: "/search",

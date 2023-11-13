@@ -1,12 +1,5 @@
-// const { Configuration, OpenAIApi } = require("openai");
 // openAI
-import {
-  ChatCompletionRequestMessage,
-  Configuration,
-  CreateImageRequestResponseFormatEnum,
-  CreateImageRequestSizeEnum,
-  OpenAIApi,
-} from "openai";
+import OpenAI from "openai";
 
 // utility
 import _ from "lodash";
@@ -21,11 +14,10 @@ import {
   ReconnectInterval,
 } from "eventsource-parser";
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true,
 });
-
-const openai = new OpenAIApi(configuration);
 
 export const openAIAPIEnum = {
   CHAT_COMPLETION: "chat_completion",
@@ -46,13 +38,9 @@ function breakLines(text: string): string {
 }
 
 async function getChatComplete(prompt: string, options: Options) {
-  const messages: ChatCompletionRequestMessage[] = [
-    { role: "user", content: prompt },
-  ];
-
-  const completions = await openai.createChatCompletion({
+  const completions = await openai.chat.completions.create({
     model: "gpt-4",
-    messages,
+    messages: [{ role: "user", content: prompt }],
     stream: !options.voiceInput,
   });
 
@@ -127,7 +115,7 @@ export async function getChatResponse(prompt: string, options: Options) {
 
   // get the data directly
   if (options.voiceInput) {
-    const content = _.get(completions, "data.choices[0].message.content");
+    const content = _.get(completions, "choices[0].message.content");
     options.handleResult(content);
     return content;
   }
@@ -150,29 +138,6 @@ export async function getChatResponse(prompt: string, options: Options) {
   return generator;
 }
 
-export async function getImageResponse(prompt: string) {
-  console.log("Sending request to OpenAI getImageResponse:", prompt);
-  console.log(configuration);
-  console.log(openai);
-
-  const request = {
-    size: CreateImageRequestSizeEnum._512x512,
-    response_format: CreateImageRequestResponseFormatEnum.Url,
-    n: 6,
-    prompt,
-  };
-
-  const imageResponse = await openai.createImage(request);
-  console.log(imageResponse);
-
-  const imageData = imageResponse.data.data.map((image) => {
-    return image.url;
-  });
-
-  console.log(`getImageResponse ${imageData}`);
-  return imageData;
-}
-
 export async function getTranslation(userVoiceInput: string, options: Options) {
   const prompt = `translate ${userVoiceInput} to English`;
   return getChatResponse(prompt, options);
@@ -187,8 +152,6 @@ export const handleOpenAIAPI = async (params: {
     const { type, data, options } = params;
 
     switch (type) {
-      case openAIAPIEnum.GENERATE_IMAGE:
-        return getImageResponse(data);
       case openAIAPIEnum.CHAT_COMPLETION:
         return getChatResponse(data, options);
       case openAIAPIEnum.TRANSLATE_VOICE:
@@ -201,24 +164,3 @@ export const handleOpenAIAPI = async (params: {
     throw e;
   }
 };
-
-// export const handleOpenAIAsyncGenrator = async (params: {
-//   type: openAIAPIFeatures;
-//   data: any;
-// }) => {
-//   try {
-//     const { type, data } = params;
-//
-//     switch (type) {
-//       case openAIAPIEnum.CHAT_COMPLETION:
-//         return getChatResponse(data);
-//       case openAIAPIEnum.TRANSLATE_VOICE:
-//         return getTranslation(data);
-//       default:
-//         throw new createHttpError.NotFound(`${type} feature is not found...`);
-//     }
-//   } catch (e) {
-//     console.error("Error from OpenAI:", e);
-//     throw e;
-//   }
-// };

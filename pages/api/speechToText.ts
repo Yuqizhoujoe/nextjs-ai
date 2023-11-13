@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs, { promises } from "fs";
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 
 type ResponseData = {
   message: string;
@@ -8,11 +8,9 @@ type ResponseData = {
   error?: any;
 };
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-const openai = new OpenAIApi(configuration);
 
 export default async function handler(
   req: NextApiRequest,
@@ -89,13 +87,12 @@ async function convertAudioToText(audioData: any) {
     eligibleAudioFile,
   });
 
-  const response = await openai.createTranscription(
-    // @ts-ignore
-    fs.createReadStream(inputPath),
-    "whisper-1"
-  );
+  const response = await openai.audio.transcriptions.create({
+    file: fs.createReadStream(inputPath),
+    model: "whisper-1",
+  });
 
-  const text = response.data.text;
+  const text = response.text;
   console.log("OPEN_AI_TRANSCRIPTION_TEXT", { text });
 
   // delete the temporary files
