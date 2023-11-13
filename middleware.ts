@@ -6,7 +6,12 @@ export async function middleware(request: NextRequest) {
   const cookies = request.cookies.getAll();
   let session;
   if (process.env.NODE_ENV === "production") {
-    session = request.cookies.get("__Secure-next-auth.session-token");
+    const productionSessionToken = request.cookies.get(
+      "__Secure-next-auth.session-token"
+    );
+    session = productionSessionToken
+      ? productionSessionToken
+      : request.cookies.get("next-auth.session-token");
   } else {
     session = request.cookies.get("next-auth.session-token");
   }
