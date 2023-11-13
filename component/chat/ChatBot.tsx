@@ -245,7 +245,7 @@ export default function ChatBot() {
       <Box
         sx={{
           flexGrow: 1,
-          height: switchToVoice ? "60vh" : "48vh",
+          // height: switchToVoice ? "60vh" : "48vh",
           overflow: "scroll",
           "&::-webkit-scrollbar": {
             display: "none",

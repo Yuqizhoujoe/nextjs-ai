@@ -8,17 +8,12 @@ const Index: React.FC = () => {
     <Container
       data-testid="home-page"
       sx={{
-        padding: {
-          mobile: 0,
-        },
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         height: {
-          xs: "80vh",
-          lg: "95vh", // Height for screens 1500px and greater
+          mobile: "80vh",
         },
-        width: "100vw",
       }}
     >
       <Box
@@ -31,8 +26,8 @@ const Index: React.FC = () => {
           src="/makima.jpeg"
           alt="JOJO"
           objectFit="cover"
-          height={500}
-          width={500}
+          height={300}
+          width={300}
         />
       </Box>
     </Container>

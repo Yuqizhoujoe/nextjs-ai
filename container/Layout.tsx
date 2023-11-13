@@ -69,10 +69,7 @@ function Layout({ children }: ContainerProps): JSX.Element {
       <ThemeProvider theme={theme}>
         <MainContainer data-testid="layout-container">
           <Header />
-          <ChildrenContainer
-            data-testid="main-content-container"
-            sx={{ padding: { mobile: 0 } }}
-          >
+          <ChildrenContainer data-testid="main-content-container">
             {children}
           </ChildrenContainer>
           <Footer />
