@@ -7,12 +7,7 @@ import { Box } from "@mui/material";
 // next ui
 import { Card, styled, Text } from "@nextui-org/react";
 
-// react query
-import { useMutation } from "@tanstack/react-query";
-
 // openai
-import { handleOpenAIAPI, openAIAPIEnum } from "../../shared/openai/openAI";
-
 // utility
 import { isEmpty } from "lodash";
 
@@ -41,47 +36,47 @@ export default function Translation() {
     });
   };
 
-  const translateVoiceMutation = useMutation({
-    mutationFn: async (userVoiceInput: string) => {
-      console.log("translateVoiceMutation mutationFn");
-      return handleOpenAIAPI({
-        type: openAIAPIEnum.TRANSLATE_VOICE,
-        data: userVoiceInput,
-        options: {
-          addItem: () =>
-            setConversations((prevState) => {
-              return [
-                ...prevState,
-                {
-                  id: prevState.length + 1,
-                  date: new Date(),
-                  type: userTypes.CHAT_BOT,
-                  content: "",
-                  loading: true,
-                },
-              ];
-            }),
-          handleResult: (value) =>
-            setConversations((prevState) => {
-              const lastConversation = prevState[prevState.length - 1];
-              prevState[prevState.length - 1] = {
-                ...lastConversation,
-                content: `${lastConversation.content}${value}`,
-                loading: false,
-              };
-              // don't return prevState
-              // return [...prevState]
-              return [...prevState];
-            }),
-          voiceInput: true,
-        },
-      });
-    },
-    onSuccess: async (result, userInput, context) => {
-      console.log("translateVoiceMutation onSuccess");
-      console.log(result);
-    },
-  });
+  // const translateVoiceMutation = useMutation({
+  //   mutationFn: async (userVoiceInput: string) => {
+  //     console.log("translateVoiceMutation mutationFn");
+  //     return handleOpenAIAPI({
+  //       type: openAIAPIEnum.TRANSLATE_VOICE,
+  //       data: userVoiceInput,
+  //       options: {
+  //         addItem: () =>
+  //           setConversations((prevState) => {
+  //             return [
+  //               ...prevState,
+  //               {
+  //                 id: prevState.length + 1,
+  //                 date: new Date(),
+  //                 type: userTypes.CHAT_BOT,
+  //                 content: "",
+  //                 loading: true,
+  //               },
+  //             ];
+  //           }),
+  //         handleResult: (value) =>
+  //           setConversations((prevState) => {
+  //             const lastConversation = prevState[prevState.length - 1];
+  //             prevState[prevState.length - 1] = {
+  //               ...lastConversation,
+  //               content: `${lastConversation.content}${value}`,
+  //               loading: false,
+  //             };
+  //             // don't return prevState
+  //             // return [...prevState]
+  //             return [...prevState];
+  //           }),
+  //         voiceInput: true,
+  //       },
+  //     });
+  //   },
+  //   onSuccess: async (result, userInput, context) => {
+  //     console.log("translateVoiceMutation onSuccess");
+  //     console.log(result);
+  //   },
+  // });
 
   const handleTextReceive = async (userVoiceInput: string) => {
     setConversations((prevState) => {
@@ -97,7 +92,7 @@ export default function Translation() {
     });
 
     //TODO: translate the text
-    await translateVoiceMutation.mutate(userVoiceInput);
+    // await translateVoiceMutation.mutate(userVoiceInput);
   };
 
   const CardItem = ({

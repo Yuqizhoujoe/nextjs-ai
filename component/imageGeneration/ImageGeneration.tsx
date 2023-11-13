@@ -14,8 +14,6 @@ import { styled } from "@mui/material/styles";
 import DirectionsIcon from "@mui/icons-material/Directions";
 
 // react query
-import { useMutation } from "@tanstack/react-query";
-import { handleOpenAIAPI, openAIAPIEnum } from "../../shared/openai/openAI";
 import Paper from "@mui/material/Paper";
 
 const COMPONENT_NAME = "image_generation_component";
@@ -66,35 +64,35 @@ const ImageGeneration = () => {
   const [images, setImages] = useState<Image[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const imageGenerationMutation = useMutation({
-    mutationFn: (userInput: string) => {
-      setLoading(true);
-      return handleOpenAIAPI({
-        type: openAIAPIEnum.GENERATE_IMAGE,
-        data: userInput,
-      });
-    },
-    onSuccess: (data, userInput, context) => {
-      console.log(data);
-      if (!Array.isArray(data)) return;
-
-      const images: Image[] = data.map((imageString, index) => {
-        return {
-          data: imageString,
-          title: `${userInput} - ${index}`,
-          rows: 1,
-          cols: 1,
-        };
-      });
-
-      setLoading(false);
-      setImages(images);
-      setUserInput("");
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
+  /*const imageGenerationMutation = useMutation({
+      mutationFn: (userInput: string) => {
+        setLoading(true);
+        return handleOpenAIAPI({
+          type: openAIAPIEnum.GENERATE_IMAGE,
+          data: userInput,
+        });
+      },
+      onSuccess: (data, userInput, context) => {
+        console.log(data);
+        if (!Array.isArray(data)) return;
+  
+        const images: Image[] = data.map((imageString, index) => {
+          return {
+            data: imageString,
+            title: `${userInput} - ${index}`,
+            rows: 1,
+            cols: 1,
+          };
+        });
+  
+        setLoading(false);
+        setImages(images);
+        setUserInput("");
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });*/
 
   const handleInput = (e: any) => {
     e.preventDefault();
@@ -103,7 +101,7 @@ const ImageGeneration = () => {
 
   const handleSubmitInput = async (e: any) => {
     e.preventDefault();
-    await imageGenerationMutation.mutate(userInput);
+    // await imageGenerationMutation.mutate(userInput);
   };
 
   const handleKeyDown = async (e: any) => {
