@@ -2,14 +2,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import ChatBox from "../common/ChatBox";
 
-// react query
-import { useMutation } from "@tanstack/react-query";
-
 // utility
 import _, { isEmpty } from "lodash";
 
 // openai
-import { handleOpenAIAPI, openAIAPIEnum } from "../../shared/openai/openAI";
+import { getChatResponse } from "../../shared/openai/openAI";
 
 // interface
 import { Conversation, VOICE_COUNTRY_DATA } from "../../shared/data/type";
@@ -93,75 +90,34 @@ export default function ChatBot() {
     };
   }, [conversations]);
 
-  // react query
-  const chatBotMutation = useMutation({
-    mutationFn: async ({
-      userInput,
-      voiceImageKey,
-    }: {
-      userInput: string;
-      voiceImageKey?: string;
-    }) => {
-      setStatus(state.SENT);
-
-      return handleOpenAIAPI({
-        type: openAIAPIEnum.CHAT_COMPLETION,
-        data: userInput,
-        options: {
-          addItem: () =>
-            setConversations((prevState) => {
-              console.log("voiceImageKey", {
-                voiceImageKey,
-              });
-              return [
-                ...prevState,
-                {
-                  id: prevState.length + 1,
-                  date: new Date(),
-                  type: userTypes.CHAT_BOT,
-                  content: "",
-                  loading: true,
-                  voiceImageKey: voiceImageKey,
-                },
-              ];
-            }),
-          handleResult: (value) =>
-            setConversations((prevState) => {
-              const lastConversation = prevState[prevState.length - 1];
-              prevState[prevState.length - 1] = {
-                ...lastConversation,
-                content: `${lastConversation.content}${value}`,
-                loading: false,
-              };
-              // don't return prevState
-              // return [...prevState]
-              return [...prevState];
-            }),
-          voiceInput: switchToVoice,
-        },
-      });
-    },
-    onSuccess: (text, userInput, context) => {
-      console.log("CHATBOT_MUTATION_ON_SUCCESS", text);
-      setStatus(state.SUCCESS);
-
-      if (switchToVoice && !_.isEmpty(voiceCountryData.data)) {
-        console.log("USE_SPEECH_CHAT_BOT_PARAMS", {
-          text,
-          voiceCountryData,
-        });
-        useSpeechSynthesisFromMicrosoft({
-          text,
-          voiceName: voiceCountryData.data.voice,
-        })
-          .then()
-          .catch();
-      }
-    },
-    onError: (error) => {
-      console.error("CHATBOT_MUTATION_ERROR", error);
-      setStatus(state.ERROR);
-    },
+  const createOpenAIChatCompletionOptions = (voiceImageKey?: string) => ({
+    addItem: () =>
+      setConversations((prevState) => {
+        return [
+          ...prevState,
+          {
+            id: prevState.length + 1,
+            date: new Date(),
+            type: userTypes.CHAT_BOT,
+            content: "",
+            loading: true,
+            voiceImageKey: voiceImageKey,
+          },
+        ];
+      }),
+    handleResult: (value) =>
+      setConversations((prevState) => {
+        const lastConversation = prevState[prevState.length - 1];
+        prevState[prevState.length - 1] = {
+          ...lastConversation,
+          content: `${lastConversation.content}${value}`,
+          loading: false,
+        };
+        // don't return prevState
+        // return [...prevState]
+        return [...prevState];
+      }),
+    voiceInput: switchToVoice,
   });
 
   // handler
@@ -179,24 +135,36 @@ export default function ChatBot() {
   };
 
   const handleSubmitInput = async (e: any) => {
-    e.preventDefault();
-    if (isEmpty(userInput)) return;
-    // user input conversation
-    setConversations((prevState) => {
-      return [
-        ...prevState,
-        {
-          content: userInput,
-          date: new Date(),
-          id: prevState.length + 1,
-          type: userTypes.USER,
-          loading: false,
-        },
-      ];
-    });
-    setUserInput("");
-    console.log("About handleSubmitInput");
-    await chatBotMutation.mutate({ userInput });
+    try {
+      e.preventDefault();
+      if (isEmpty(userInput)) return;
+      // user input conversation
+      setConversations((prevState) => {
+        return [
+          ...prevState,
+          {
+            content: userInput,
+            date: new Date(),
+            id: prevState.length + 1,
+            type: userTypes.USER,
+            loading: false,
+          },
+        ];
+      });
+      setUserInput("");
+
+      setStatus(state.SENT);
+      const options = createOpenAIChatCompletionOptions();
+      const openAIChatCompletionResult = await getChatResponse(
+        userInput,
+        options
+      );
+      console.log("OPEN_AI_CHAT_COMPLETION", { openAIChatCompletionResult });
+      setStatus(state.SUCCESS);
+    } catch (e) {
+      setStatus(state.ERROR);
+      console.error(e);
+    }
   };
 
   const handleKeyDown = async (e: any) => {
@@ -253,12 +221,20 @@ export default function ChatBot() {
 
       setVoiceCountryData({ key: voiceImageKey, data: voiceCountryData });
 
-      // @ts-ignore
-      await chatBotMutation.mutate({
-        userInput: text,
-        voiceImageKey,
-      });
+      setStatus(state.SENT);
+      const options = createOpenAIChatCompletionOptions(voiceImageKey);
+      const aiResponse = await getChatResponse(text, options);
+      setStatus(state.SUCCESS);
+      if (switchToVoice && !_.isEmpty(voiceCountryData)) {
+        useSpeechSynthesisFromMicrosoft({
+          text: aiResponse,
+          voiceName: voiceCountryData.voice,
+        })
+          .then()
+          .catch();
+      }
     } catch (e) {
+      setStatus(state.ERROR);
       console.error(e);
     }
   };
