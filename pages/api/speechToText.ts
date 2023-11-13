@@ -25,10 +25,18 @@ export default async function handler(
 
 async function POST(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   try {
+    console.log("SPEECH_TO_TEXT_POST", {
+      req,
+    });
+
     // extract the audio data
     const base64Audio = req.body.audio;
     // convert the base64 audio data back to a Buffer
     const audio = Buffer.from(base64Audio, "base64");
+
+    console.log("SPEECH_TO_TEXT_POST_PARAMS", {
+      audio,
+    });
 
     const text = await convertAudioToText(audio);
 
