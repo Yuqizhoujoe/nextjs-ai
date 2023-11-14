@@ -33,6 +33,7 @@ const Speech: React.FC<SpeechRecognizerProps> = ({
     stopRecording: stopMediaRecording,
     mediaBlobUrl,
   } = useReactMediaRecorder({
+    video: false,
     audio: true,
     onStart: () => {
       setIsRecording(true);
