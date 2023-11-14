@@ -173,7 +173,6 @@ const useSpeech = (recording?: boolean) => {
         speechSynthesizer.speakTextAsync(text, (result) => {
           switch (result.reason) {
             case ResultReason.SynthesizingAudioCompleted:
-              console.log("SYNTHESIS_COMPLETED_RESULT", result);
               resolve(result.audioData);
               break;
             default:

@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import ChatBox from "../common/ChatBox";
-
 // utility
 import _, { isEmpty } from "lodash";
 
@@ -23,13 +22,18 @@ import {
   TextField,
 } from "@mui/material";
 import DirectionsIcon from "@mui/icons-material/Directions";
-import Speech from "../common/Speech";
+
 import axios from "../../shared/api/axios";
 
 // hooks
 import useSpeech from "../../shared/hooks/useSpeech";
 import { useAppContext } from "../../shared/context";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+// import Speech from "../common/Speech";
+const Speech = dynamic(() => import("../common/Speech"), {
+  ssr: false,
+});
 
 const COMPONENT = "chat_bot_component";
 
@@ -344,7 +348,7 @@ export default function ChatBot() {
         gap: 2,
         height: {
           mobile: "80vh", // Default height for screens less than 1500px
-          tablet: "85vh", // Height for screens 1500px and greater
+          // tablet: "85vh", // Height for screens 1500px and greater
         },
       }}
     >

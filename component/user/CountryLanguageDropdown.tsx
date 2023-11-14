@@ -237,8 +237,8 @@ export default function CountryLanguageDropdown({}: {}) {
           gap: 2,
           justifyContent: "space-between",
           flexDirection: {
-            xs: "column",
-            sm: "row",
+            mobile: "column",
+            laptop: "row",
           },
         }}
       >
@@ -246,8 +246,8 @@ export default function CountryLanguageDropdown({}: {}) {
           sx={{
             display: "flex",
             flexDirection: {
-              xs: "column",
-              sm: "row",
+              mobile: "column",
+              laptop: "row",
             },
             alignItems: "center",
             gap: 2,

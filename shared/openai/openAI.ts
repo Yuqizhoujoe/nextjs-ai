@@ -14,7 +14,7 @@ import {
   ReconnectInterval,
 } from "eventsource-parser";
 
-const openai = new OpenAI({
+export const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
 });

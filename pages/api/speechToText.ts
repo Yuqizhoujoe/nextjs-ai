@@ -25,11 +25,23 @@ export default async function handler(
 async function POST(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   try {
     // extract the audio data
-    const base64Audio = req.body.audio;
+    const { audio } = req.body;
     // convert the base64 audio data back to a Buffer
-    const audio = Buffer.from(base64Audio, "base64");
+    // const audio = Buffer.from(base64Audio, "base64");
 
-    const text = await convertAudioToText(audio);
+    console.log("POST_SPEECH_TO_TEXT_PARAMS", {
+      audio,
+    });
+
+    const response = await openai.audio.transcriptions.create({
+      file: audio,
+      model: "whisper-1",
+    });
+
+    const text = response.text;
+    console.log("OPEN_AI_TRANSCRIPTION_TEXT", { text });
+
+    // const text = await convertAudioToText(audio);
 
     return res
       .status(200)
@@ -38,6 +50,33 @@ async function POST(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
     console.error(err);
     return res.status(500).json({ message: "Failed!!", error: err });
   }
+}
+
+async function convertAudioToText(audioData: Buffer) {
+  const inputPath = "/tmp/input.mp3";
+  await promises.writeFile(inputPath, audioData);
+
+  // const eligibleAudioFile = await checkAudioFile(inputPath);
+
+  const audioStreamInput = fs.createReadStream(inputPath);
+  const type = await fileTypeFromStream(audioStreamInput);
+
+  console.log("OPEN_AI_TRANSCRIPTION_PARAMS", {
+    type,
+  });
+
+  const response = await openai.audio.transcriptions.create({
+    file: audioStreamInput,
+    model: "whisper-1",
+  });
+
+  const text = response.text;
+  console.log("OPEN_AI_TRANSCRIPTION_TEXT", { text });
+
+  // delete the temporary files
+  await promises.unlink(inputPath);
+
+  return text;
 }
 
 async function checkAudioFile(filePath: string) {
@@ -67,33 +106,4 @@ async function checkAudioFile(filePath: string) {
 
     throw error;
   }
-}
-
-async function convertAudioToText(audioData: any) {
-  const inputPath = "/tmp/input.webm";
-  await promises.writeFile(inputPath, audioData);
-
-  // const eligibleAudioFile = await checkAudioFile(inputPath);
-
-  const audioStreamInput = fs.createReadStream(inputPath);
-  const type = await fileTypeFromStream(audioStreamInput);
-
-  console.log("OPEN_AI_TRANSCRIPTION_PARAMS", {
-    // audioData,
-    // eligibleAudioFile,
-    type,
-  });
-
-  const response = await openai.audio.transcriptions.create({
-    file: audioStreamInput,
-    model: "whisper-1",
-  });
-
-  const text = response.text;
-  console.log("OPEN_AI_TRANSCRIPTION_TEXT", { text });
-
-  // delete the temporary files
-  await promises.unlink(inputPath);
-
-  return text;
 }
