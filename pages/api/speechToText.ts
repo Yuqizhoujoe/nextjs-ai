@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs, { promises } from "fs";
-import fileType from "file-type";
+import { fileTypeFromStream } from "file-type";
 import OpenAI from "openai";
 
 type ResponseData = {
@@ -76,7 +76,7 @@ async function convertAudioToText(audioData: any) {
   // const eligibleAudioFile = await checkAudioFile(inputPath);
 
   const audioStreamInput = fs.createReadStream(inputPath);
-  const type = await fileType.fileTypeFromStream(audioStreamInput);
+  const type = await fileTypeFromStream(audioStreamInput);
 
   console.log("OPEN_AI_TRANSCRIPTION_PARAMS", {
     // audioData,
