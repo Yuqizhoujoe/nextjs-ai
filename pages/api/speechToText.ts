@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs, { promises } from "fs";
+import fileType from "file-type";
 import OpenAI from "openai";
 
 type ResponseData = {
@@ -23,18 +24,10 @@ export default async function handler(
 
 async function POST(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   try {
-    console.log("SPEECH_TO_TEXT_POST", {
-      req,
-    });
-
     // extract the audio data
     const base64Audio = req.body.audio;
     // convert the base64 audio data back to a Buffer
     const audio = Buffer.from(base64Audio, "base64");
-
-    console.log("SPEECH_TO_TEXT_POST_PARAMS", {
-      audio,
-    });
 
     const text = await convertAudioToText(audio);
 
@@ -80,15 +73,19 @@ async function convertAudioToText(audioData: any) {
   const inputPath = "/tmp/input.webm";
   await promises.writeFile(inputPath, audioData);
 
-  const eligibleAudioFile = await checkAudioFile(inputPath);
+  // const eligibleAudioFile = await checkAudioFile(inputPath);
+
+  const audioStreamInput = fs.createReadStream(inputPath);
+  const type = await fileType.fileTypeFromStream(audioStreamInput);
 
   console.log("OPEN_AI_TRANSCRIPTION_PARAMS", {
-    audioData,
-    eligibleAudioFile,
+    // audioData,
+    // eligibleAudioFile,
+    type,
   });
 
   const response = await openai.audio.transcriptions.create({
-    file: fs.createReadStream(inputPath),
+    file: audioStreamInput,
     model: "whisper-1",
   });
 

@@ -26,6 +26,7 @@
     "@vercel/analytics": "^1.1.1",
     "axios": "^1.4.0",
     "eventsource-parser": "^1.0.0",
+    "file-type": "^18.7.0",
     "firebase": "^9.21.0",
     "firebaseui": "^6.1.0",
     "http-errors": "^2.0.0",
