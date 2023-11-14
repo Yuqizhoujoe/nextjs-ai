@@ -343,8 +343,8 @@ export default function ChatBot() {
         flexDirection: "column",
         gap: 2,
         height: {
-          xs: "80vh", // Default height for screens less than 1500px
-          xl: "85vh", // Height for screens 1500px and greater
+          mobile: "80vh", // Default height for screens less than 1500px
+          tablet: "85vh", // Height for screens 1500px and greater
         },
       }}
     >
