@@ -44,7 +44,13 @@ const Speech: React.FC<SpeechRecognizerProps> = ({
         const fileExtension =
           blob && blob.type ? blob.type.split("/")[1] : "mpeg";
 
-        const audioFile = new File([blob], `audio.mpeg`, { type: blob.type });
+        const audioFile = new File([blob], `audio.${fileExtension}`, {
+          type: blob.type,
+        });
+        console.log("OPENAI_AUDIO_FILE", {
+          audioFile,
+          blob,
+        });
 
         const res = await openai.audio.transcriptions.create({
           file: audioFile,
